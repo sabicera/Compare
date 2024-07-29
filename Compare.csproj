@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net7.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <ApplicationIcon>Check.ico</ApplicationIcon>
+    <Title>Inspections Checker</Title>
+    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+    <Version>1</Version>
+    <Authors>Ramnuda</Authors>
+    <Company>Ramnuda</Company>
+    <Product>Internal Consumption</Product>
+    <Description>Inspections Checker</Description>
+    <Copyright>Off Course</Copyright>
+    <PackageIcon>Check.png</PackageIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="Check.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\..\Downloads\Check.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>
