@@ -1,5 +1,6 @@
 using System;
 using System.Windows.Forms;
+using static System.Windows.Forms.DataFormats;
 
 namespace Compare
 {
@@ -17,15 +18,22 @@ namespace Compare
         {
             DisplayPanamaTime();
         }
+        private Form2 form2;
         public Form1()
         {
             InitializeComponent();
             DisplayPanamaTime();
             InitializeTimer();
+            InitializeForm2();
 
             // Subscribe to the KeyDown event for both RichTextBox controls
             K9RichTextBox.KeyDown += new KeyEventHandler(RichTextBox_KeyDown);
             UWRichTextBox.KeyDown += new KeyEventHandler(RichTextBox_KeyDown);
+        }
+        private void InitializeForm2()
+        {
+            form2 = new Form2();
+            form2.FormClosed += new FormClosedEventHandler(Form2_FormClosed);
         }
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -312,6 +320,30 @@ namespace Compare
                 {
                     HighlightLine(UWRichTextBox, j, Color.LightCoral);
                 }
+            }
+        }
+        private void Form2_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            form2.Dispose();
+            form2 = null;
+        }
+        private void Btn_Pending_Click(object sender, EventArgs e)
+        {
+            if (form2 == null)
+            {
+                InitializeForm2();
+            }
+
+            // Check if Form2 is already open
+            if (form2.Visible)
+            {
+                // Close Form2
+                form2.Hide();
+            }
+            else
+            {
+                // Open Form2
+                form2.Show();
             }
         }
     }

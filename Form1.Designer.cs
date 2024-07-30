@@ -42,6 +42,7 @@ namespace Compare
             Btn_Check = new Button();
             LB_Panama = new Label();
             LB_Time = new Label();
+            Btn_Pending = new Button();
             SuspendLayout();
             // 
             // K9RichTextBox
@@ -189,9 +190,23 @@ namespace Compare
             LB_Time.ForeColor = Color.Yellow;
             LB_Time.Location = new Point(156, 13);
             LB_Time.Name = "LB_Time";
-            LB_Time.Size = new Size(106, 26);
+            LB_Time.Size = new Size(138, 26);
             LB_Time.TabIndex = 13;
-            LB_Time.Text = "Date & Time";
+            LB_Time.Text = "Date and Time";
+            // 
+            // Btn_Pending
+            // 
+            Btn_Pending.Anchor = AnchorStyles.Top;
+            Btn_Pending.BackColor = Color.FromArgb(192, 255, 255);
+            Btn_Pending.FlatStyle = FlatStyle.Flat;
+            Btn_Pending.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point);
+            Btn_Pending.Location = new Point(996, 12);
+            Btn_Pending.Name = "Btn_Pending";
+            Btn_Pending.Size = new Size(137, 36);
+            Btn_Pending.TabIndex = 14;
+            Btn_Pending.Text = "Pending";
+            Btn_Pending.UseVisualStyleBackColor = false;
+            Btn_Pending.Click += Btn_Pending_Click;
             // 
             // Form1
             // 
@@ -199,6 +214,7 @@ namespace Compare
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.Teal;
             ClientSize = new Size(1145, 811);
+            Controls.Add(Btn_Pending);
             Controls.Add(LB_Time);
             Controls.Add(LB_Panama);
             Controls.Add(Btn_Check);
@@ -225,16 +241,17 @@ namespace Compare
 
         #endregion
 
-        private RichTextBox K9RichTextBox;
-        private RichTextBox UWRichTextBox;
         private Label LB_K9;
         private Label LB_UW;
+        private Label LB_Panama;
+        private Label LB_Time;
+        private RichTextBox K9RichTextBox;
+        private RichTextBox UWRichTextBox;
         private Button K9_Clear_Btn;
         private Button UW_Clear_Btn;
         private Button Btn_CopyK9;
         private Button Btn_CopyUW;
         private Button Btn_Check;
-        private Label LB_Panama;
-        private Label LB_Time;
+        private Button Btn_Pending;
     }
 }
