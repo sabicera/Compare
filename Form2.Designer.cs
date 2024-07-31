@@ -30,46 +30,17 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form2));
             dataGridView1 = new DataGridView();
-            Vessel = new DataGridViewTextBoxColumn();
-            ETD = new DataGridViewTextBoxColumn();
-            ETB = new DataGridViewTextBoxColumn();
-            Time_Left = new DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
             // dataGridView1
             // 
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Columns.AddRange(new DataGridViewColumn[] { Vessel, ETD, ETB, Time_Left });
             dataGridView1.Location = new Point(12, 12);
             dataGridView1.Name = "dataGridView1";
             dataGridView1.RowTemplate.Height = 25;
             dataGridView1.Size = new Size(776, 426);
             dataGridView1.TabIndex = 1;
-            // 
-            // Vessel
-            // 
-            Vessel.HeaderText = "Vessel";
-            Vessel.Name = "Vessel";
-            Vessel.ReadOnly = true;
-            // 
-            // ETD
-            // 
-            ETD.HeaderText = "ETD";
-            ETD.Name = "ETD";
-            ETD.ReadOnly = true;
-            // 
-            // ETB
-            // 
-            ETB.HeaderText = "ETB";
-            ETB.Name = "ETB";
-            ETB.ReadOnly = true;
-            // 
-            // Time_Left
-            // 
-            Time_Left.HeaderText = "Time Left";
-            Time_Left.Name = "Time_Left";
-            Time_Left.ReadOnly = true;
             // 
             // Form2
             // 
@@ -83,13 +54,8 @@
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ResumeLayout(false);
         }
-
         #endregion
 
         private DataGridView dataGridView1;
-        private DataGridViewTextBoxColumn Vessel;
-        private DataGridViewTextBoxColumn ETD;
-        private DataGridViewTextBoxColumn ETB;
-        private DataGridViewTextBoxColumn Time_Left;
     }
 }

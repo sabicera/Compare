@@ -1,7 +1,3 @@
-using System;
-using System.Windows.Forms;
-using static System.Windows.Forms.DataFormats;
-
 namespace Compare
 {
     public partial class Form1 : Form
