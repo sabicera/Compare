@@ -5,8 +5,10 @@ namespace Compare
         private System.Windows.Forms.Timer timer;
         private void InitializeTimer()
         {
-            timer = new System.Windows.Forms.Timer();
-            timer.Interval = 1000; // Set the timer interval to 1 second (1000 milliseconds)
+            timer = new System.Windows.Forms.Timer
+            {
+                Interval = 1000 // Set the timer interval to 1 second (1000 milliseconds)
+            };
             timer.Tick += Timer_Tick;
             timer.Start();
         }
@@ -87,9 +89,9 @@ namespace Compare
             {
                 // Handle the Tab key
                 Control focusedControl = ActiveControl as RichTextBox;
-                if (focusedControl != null && focusedControl is RichTextBox)
+                if (focusedControl != null && focusedControl is RichTextBox box)
                 {
-                    RichTextBox richTextBox = (RichTextBox)focusedControl;
+                    RichTextBox richTextBox = box;
 
                     // Insert a tab character
                     int position = richTextBox.SelectionStart;
@@ -104,9 +106,9 @@ namespace Compare
             {
                 // Handle Ctrl+Z for undo
                 Control focusedControl = ActiveControl as RichTextBox;
-                if (focusedControl != null && focusedControl is RichTextBox)
+                if (focusedControl != null && focusedControl is RichTextBox box)
                 {
-                    RichTextBox richTextBox = (RichTextBox)focusedControl;
+                    RichTextBox richTextBox = box;
 
                     // Perform undo operation
                     if (richTextBox.CanUndo)
@@ -218,13 +220,13 @@ namespace Compare
         {
             CompareRichTextBoxes();
         }
-        private void ClearHighlights(RichTextBox richTextBox)
+        private static void ClearHighlights(RichTextBox richTextBox)
         {
             richTextBox.SelectAll();
             richTextBox.SelectionBackColor = Color.White;
             richTextBox.DeselectAll();
         }
-        private void HighlightLine(RichTextBox richTextBox, int lineIndex, Color backColor)
+        private static void HighlightLine(RichTextBox richTextBox, int lineIndex, Color backColor)
         {
             int start = richTextBox.GetFirstCharIndexFromLine(lineIndex);
             if (start < 0) return; // Line doesn't exist

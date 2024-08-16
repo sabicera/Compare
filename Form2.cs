@@ -1,7 +1,4 @@
-﻿using System;
-using System.Windows.Forms;
-
-namespace Compare
+﻿namespace Compare
 {
     public partial class Form2 : Form
     {
