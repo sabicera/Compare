@@ -14,7 +14,6 @@ namespace Compare
             timer.Tick += Timer_Tick;
             timer.Start();
         }
-
         private void Timer_Tick(object sender, EventArgs e)
         {
             DisplayPanamaTime();
@@ -23,8 +22,6 @@ namespace Compare
         private TimeZoneInfo panamaTimeZone;
         private System.Windows.Forms.Timer updateTimer;
         private DateTime lastUpdateTime;
-
-
         public Form1()
         {
             InitializeComponent();
@@ -374,6 +371,7 @@ namespace Compare
             foreach (var line in lines)
             {
                 int etdIndex = line.IndexOf("ETD");
+
                 if (etdIndex != -1)
                 {
                     string remainingText = line.Substring(etdIndex + 3).Trim();
@@ -392,7 +390,7 @@ namespace Compare
                         if (DateTime.TryParseExact(dateString, "dd/MM HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime date))
                         {
                             // Include the matched part plus one space (if available) in the trimmed line
-                            string trimmedLine = line.Substring(0, etdIndex + 3) + dateString + (match.Value.EndsWith(" ") ? " " : "");
+                            string trimmedLine = line.Substring(0, etdIndex + 3) + (" ") + dateString + (match.Value.EndsWith(" ") ? " " : "");
                             result.Add(new Tuple<string, DateTime>(trimmedLine, date));
                         }
                     }

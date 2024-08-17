@@ -13,7 +13,7 @@
         private void SetupDataGridView()
         {
             dataGridView1.ColumnCount = 1;
-            dataGridView1.Columns[0].Name = "ETD Lines";
+            dataGridView1.Columns[0].Name = "Inspection Priorities";
             dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dataGridView1.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
             dataGridView1.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
