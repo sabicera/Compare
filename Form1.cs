@@ -45,7 +45,7 @@ namespace Compare
         private void InitializeUpdateTimer()
         {
             updateTimer = new System.Windows.Forms.Timer();
-            updateTimer.Interval = 1000; // Update every second
+            updateTimer.Interval = 10000; // Update every second
             updateTimer.Tick += UpdateTimer_Tick;
             updateTimer.Start();
         }
