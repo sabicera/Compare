@@ -91,7 +91,7 @@ namespace Compare
             LB_K9.AutoSize = true;
             LB_K9.Font = new Font("Comic Sans MS", 20.25F, FontStyle.Bold, GraphicsUnit.Point);
             LB_K9.ForeColor = Color.White;
-            LB_K9.Location = new Point(300, 6);
+            LB_K9.Location = new Point(300, 7);
             LB_K9.Name = "LB_K9";
             LB_K9.Size = new Size(50, 38);
             LB_K9.TabIndex = 3;
@@ -103,7 +103,7 @@ namespace Compare
             LB_UW.AutoSize = true;
             LB_UW.Font = new Font("Comic Sans MS", 20.25F, FontStyle.Bold, GraphicsUnit.Point);
             LB_UW.ForeColor = Color.White;
-            LB_UW.Location = new Point(560, 6);
+            LB_UW.Location = new Point(560, 7);
             LB_UW.Name = "LB_UW";
             LB_UW.Size = new Size(169, 38);
             LB_UW.TabIndex = 4;
@@ -207,7 +207,7 @@ namespace Compare
             Btn_Pending.BackColor = Color.FromArgb(192, 255, 255);
             Btn_Pending.FlatStyle = FlatStyle.Flat;
             Btn_Pending.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point);
-            Btn_Pending.Location = new Point(735, 9);
+            Btn_Pending.Location = new Point(735, 8);
             Btn_Pending.Name = "Btn_Pending";
             Btn_Pending.Size = new Size(137, 36);
             Btn_Pending.TabIndex = 14;
@@ -253,7 +253,6 @@ namespace Compare
             Name = "Form1";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Inspections Checker";
-            TopMost = true;
             FormClosing += Form1_FormClosing;
             Load += Form1_Load;
             ContextMenuStripChanged += RichTextContextMenu;
