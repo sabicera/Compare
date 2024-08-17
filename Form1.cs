@@ -376,10 +376,25 @@ namespace Compare
                 int etdIndex = line.IndexOf("ETD");
                 if (etdIndex != -1)
                 {
-                    string dateString = line.Substring(etdIndex + 3).Trim();
-                    if (DateTime.TryParseExact(dateString, "dd/MM HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime date))
+                    string remainingText = line.Substring(etdIndex + 3).Trim();
+
+                    // Try to match the pattern "DD/MM HH:MM" plus one space
+                    var match = System.Text.RegularExpressions.Regex.Match(remainingText, @"(\d{2}/\d{2} \d{2}:)(\d{2}) ?");
+
+                    if (match.Success)
                     {
-                        result.Add(new Tuple<string, DateTime>(line, date));
+                        string datePrefix = match.Groups[1].Value;
+                        string minutes = match.Groups[2].Value;
+
+                        // Replace "00" with "00"
+                        string dateString = datePrefix + (minutes == "00" ? "00" : minutes);
+
+                        if (DateTime.TryParseExact(dateString, "dd/MM HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime date))
+                        {
+                            // Include the matched part plus one space (if available) in the trimmed line
+                            string trimmedLine = line.Substring(0, etdIndex + 3) + dateString + (match.Value.EndsWith(" ") ? " " : "");
+                            result.Add(new Tuple<string, DateTime>(trimmedLine, date));
+                        }
                     }
                 }
             }

@@ -3,6 +3,7 @@
     public partial class Form2 : Form
     {
         private bool blinkState = false;
+
         public Form2()
         {
             InitializeComponent();
@@ -24,6 +25,13 @@
                 null,
                 dataGridView1,
                 new object[] { true });
+
+            // Modify selection style
+            dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dataGridView1.DefaultCellStyle.SelectionBackColor = Color.Transparent;
+            dataGridView1.DefaultCellStyle.SelectionForeColor = Color.Black;
+
+            dataGridView1.RowPrePaint += DataGridView1_RowPrePaint; // Use custom painting for rows
         }
 
         private void BlinkTimer_Tick(object sender, EventArgs e)
@@ -32,10 +40,46 @@
             dataGridView1.Invalidate();
         }
 
+        private void DataGridView1_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
+        {
+            // Get the current row
+            DataGridViewRow row = dataGridView1.Rows[e.RowIndex];
+
+            // Determine the background color based on your conditions
+            Color backgroundColor = Color.White;
+            Color foregroundColor = Color.Black;
+
+            if (row.Tag is int hoursUntilETD)
+            {
+                if (hoursUntilETD < 6)
+                {
+                    backgroundColor = blinkState ? Color.Red : Color.White;
+                    foregroundColor = blinkState ? Color.White : Color.Black;
+                }
+                else if (hoursUntilETD < 12)
+                {
+                    backgroundColor = Color.Yellow;
+                }
+            }
+
+            // Override the default selection behavior
+            if (row.Selected)
+            {
+                e.Graphics.FillRectangle(new SolidBrush(backgroundColor), e.RowBounds);
+                row.DefaultCellStyle.ForeColor = foregroundColor;
+                row.DefaultCellStyle.Font = new Font(dataGridView1.Font, FontStyle.Bold); // Bold font for selection
+            }
+            else
+            {
+                e.Graphics.FillRectangle(new SolidBrush(backgroundColor), e.RowBounds);
+                row.DefaultCellStyle.ForeColor = foregroundColor;
+            }
+
+            e.PaintParts &= ~DataGridViewPaintParts.Background; // Prevent default background painting
+        }
+
         public void UpdateDataGridView(List<Tuple<string, bool>> lines)
         {
-            dataGridView1.SuspendLayout();
-
             try
             {
                 int firstDisplayedScrollingRowIndex = dataGridView1.FirstDisplayedScrollingRowIndex;
@@ -47,8 +91,7 @@
                     int rowIndex = dataGridView1.Rows.Add(item.Item1);
                     if (item.Item2)
                     {
-                        dataGridView1.Rows[rowIndex].DefaultCellStyle.BackColor = Color.Yellow;
-                        dataGridView1.Rows[rowIndex].DefaultCellStyle.Font = new Font(dataGridView1.Font, FontStyle.Bold);
+                        dataGridView1.Rows[rowIndex].Tag = 10; // Just for demonstration, use your actual logic
                     }
                 }
 
@@ -62,11 +105,13 @@
                 dataGridView1.ResumeLayout();
             }
         }
+
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
             UpdateRowColors();
         }
+
         private void UpdateRowColors()
         {
             foreach (DataGridViewRow row in dataGridView1.Rows)
@@ -81,12 +126,10 @@
                     else if (hoursUntilETD < 12)
                     {
                         row.DefaultCellStyle.BackColor = Color.Yellow;
-                        row.DefaultCellStyle.Font = new Font(dataGridView1.Font, FontStyle.Bold);
                     }
                     else
                     {
                         row.DefaultCellStyle.BackColor = Color.White;
-                        row.DefaultCellStyle.Font = new Font(dataGridView1.Font, FontStyle.Regular);
                     }
                 }
             }
