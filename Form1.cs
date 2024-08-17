@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace Compare
 {
     public partial class Form1 : Form
@@ -12,21 +14,52 @@ namespace Compare
             timer.Tick += Timer_Tick;
             timer.Start();
         }
+
         private void Timer_Tick(object sender, EventArgs e)
         {
             DisplayPanamaTime();
         }
         private Form2 form2;
+        private TimeZoneInfo panamaTimeZone;
+        private System.Windows.Forms.Timer updateTimer;
+        private DateTime lastUpdateTime;
+
+
         public Form1()
         {
             InitializeComponent();
             DisplayPanamaTime();
             InitializeTimer();
             InitializeForm2();
+            InitializeUpdateTimer();
+
+
+            panamaTimeZone = TimeZoneInfo.CreateCustomTimeZone("Panama Standard Time", TimeSpan.FromHours(-5), "Panama Standard Time", "Panama Standard Time");
 
             // Subscribe to the KeyDown event for both RichTextBox controls
             K9RichTextBox.KeyDown += new KeyEventHandler(RichTextBox_KeyDown);
             UWRichTextBox.KeyDown += new KeyEventHandler(RichTextBox_KeyDown);
+            form2 = new Form2();
+            form2.FormClosed += new FormClosedEventHandler(Form2_FormClosed);
+
+            // Initial update of DataGridView
+            UpdateForm2DataGridView();
+        }
+        private void InitializeUpdateTimer()
+        {
+            updateTimer = new System.Windows.Forms.Timer();
+            updateTimer.Interval = 1000; // Update every second
+            updateTimer.Tick += UpdateTimer_Tick;
+            updateTimer.Start();
+        }
+        private void UpdateTimer_Tick(object sender, EventArgs e)
+        {
+            DateTime currentTime = DateTime.Now;
+            if ((currentTime - lastUpdateTime).TotalSeconds >= 5) // Update every 5 seconds
+            {
+                UpdateForm2DataGridView();
+                lastUpdateTime = currentTime;
+            }
         }
         private void InitializeForm2()
         {
@@ -48,6 +81,10 @@ namespace Compare
                 string text = File.ReadAllText(UWFilePath);
                 UWRichTextBox.Text = text;
             }
+            K9_Clear_Btn.BringToFront();
+            UW_Clear_Btn.BringToFront();
+            Btn_CopyK9.BringToFront();
+            Btn_CopyUW.BringToFront();
         }
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -62,27 +99,15 @@ namespace Compare
         {
             try
             {
-                // Define the Panama time zone (Eastern Standard Time, UTC-5 without DST)
-                TimeZoneInfo panamaTimeZone = TimeZoneInfo.CreateCustomTimeZone("Panama Standard Time", TimeSpan.FromHours(-5), "Panama Standard Time", "Panama Standard Time");
-
-                // Get current UTC time
-                DateTime utcNow = DateTime.UtcNow;
-
-                // Convert UTC time to Panama local time
-                DateTime panamaLocalTime = TimeZoneInfo.ConvertTimeFromUtc(utcNow, panamaTimeZone);
-
-                // Format the Panama local time as "DD/MM HH:MM"
+                DateTime panamaLocalTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, panamaTimeZone);
                 string formattedPanamaTime = panamaLocalTime.ToString("dd/MM HH:mm:ss");
-
-                // Display the Panama local time on the label
                 LB_Time.Text = $"{formattedPanamaTime}";
             }
             catch (Exception ex)
             {
                 LB_Time.Text = $"An error occurred: {ex.Message}";
             }
-        }
-        // Override ProcessCmdKey to handle the Tab key
+        }        // Override ProcessCmdKey to handle the Tab key
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
             if (keyData == Keys.Tab)
@@ -248,11 +273,11 @@ namespace Compare
         }
         private void K9RichTextBox_TextChanged(object sender, EventArgs e)
         {
-
+            lastUpdateTime = DateTime.Now.AddSeconds(-5); // Force update on next tick
         }
         private void UWRichTextBox_TextChanged(object sender, EventArgs e)
         {
-
+            lastUpdateTime = DateTime.Now.AddSeconds(-5); // Force update on next tick
         }
         private void Btn_CopyK9_Click(object sender, EventArgs e)
         {
@@ -327,21 +352,60 @@ namespace Compare
         }
         private void Btn_Pending_Click(object sender, EventArgs e)
         {
-            if (form2 == null)
+            if (form2 == null || form2.IsDisposed)
             {
                 InitializeForm2();
             }
 
-            // Check if Form2 is already open
             if (form2.Visible)
             {
-                // Close Form2
                 form2.Hide();
             }
             else
             {
-                // Open Form2
                 form2.Show();
+                UpdateForm2DataGridView(); // Update the DataGridView when showing Form2
+            }
+        }
+        private List<Tuple<string, DateTime>> ParseETDDates(string text)
+        {
+            var result = new List<Tuple<string, DateTime>>();
+            var lines = text.Split('\n');
+            foreach (var line in lines)
+            {
+                int etdIndex = line.IndexOf("ETD");
+                if (etdIndex != -1)
+                {
+                    string dateString = line.Substring(etdIndex + 3).Trim();
+                    if (DateTime.TryParseExact(dateString, "dd/MM HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime date))
+                    {
+                        result.Add(new Tuple<string, DateTime>(line, date));
+                    }
+                }
+            }
+            return result;
+        }
+        private void UpdateForm2DataGridView()
+        {
+            if (form2 != null && !form2.IsDisposed && form2.Visible)
+            {
+                var k9Dates = ParseETDDates(K9RichTextBox.Text);
+                var uwDates = ParseETDDates(UWRichTextBox.Text);
+
+                var allDates = k9Dates.Concat(uwDates)
+                    .GroupBy(t => t.Item1)
+                    .Select(g => g.First())
+                    .OrderBy(t => t.Item2)
+                    .ToList();
+
+                DateTime currentPanamaTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, panamaTimeZone);
+
+                var processedDates = allDates.Select(t => new Tuple<string, bool>(
+                    t.Item1,
+                    (t.Item2 - currentPanamaTime).TotalHours < 12 && (t.Item2 - currentPanamaTime).TotalHours > 0
+                )).ToList();
+
+                form2.UpdateDataGridView(processedDates);
             }
         }
     }
